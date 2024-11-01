@@ -1,0 +1,93 @@
+//*********** Instalattion
+
+1.npm install @react-navigation/native
+2.npx expo install react-native-screens react-native-safe-area-context
+3.npm install react-native-screens react-native-safe-area-context
+4.npm install @react-navigation/native-stack
+
+
+//*************** steps 
+1.pass props in homeScreen  and do console and run
+2.add button on home screen and add onPress and go home to profile
+3.pass the data as an props home screen to profile Screen
+
+
+
+//********** stack navigatio 1111111111 CODE 
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './screens/HomeScreen';
+// import ProfileScreen from './screens/ProfileScreen';
+// import {Navigation} from 'react'
+import ProfileScreen from './screens/ProfileScreen';
+import UserScreen from './screens/UserScreen';
+import { Text } from 'react-native';
+
+export default function App() {
+  const Stack = createNativeStackNavigator();
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+      // initialRouteName='User'
+
+       //if we want to use to all  screens this functionality
+      screenOptions={{
+        statusBarColor:'orange',
+        // title:'Home Screen',
+        headerStyle:{
+          backgroundColor:'orange'
+        },
+        headerTintColor:'white',
+        headerTitleAlign:'center'
+      }}
+
+      >
+        <Stack.Screen name="Home" component={HomeScreen}
+        
+        //if we want to use onle seprate screens this functionality
+        // options={{
+        //   statusBarColor:'orange',
+        //   title:'Home Screen',
+        //   headerStyle:{
+        //     backgroundColor:'orange'
+        //   },
+        //   headerTintColor:'white',
+        //   headerTitleAlign:'center'
+        // }}
+        />
+        <Stack.Screen name='Profile' component={ProfileScreen}/>
+        <Stack.Screen name='User' component={UserScreen}
+        
+        //header ko chupane ke liye
+        options={{
+          // headerShown:false
+          headerShown:true,
+          //back arrrow icon ko chupane ke liye
+          headerBackVisible:false,
+          //apna khud ka arrow or text dikhaneke liye
+          headerLeft:({navigation})=>{
+            return(
+              <Text onPress={()=>navigation.goBack()}>Back</Text>
+            )
+          }
+
+
+        }}
+        
+        />
+
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
