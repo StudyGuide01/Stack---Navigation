@@ -6,7 +6,7 @@ const ProfileScreen = (props) => {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
       <Text>Profile Screen</Text>
-      <Text>{props.route.params.name}</Text>
+      {/* <Text>{props.route.params.name}</Text> */}
         <Button title='User' onPress={()=>props.navigation.navigate('User')} />
 
     </View>
