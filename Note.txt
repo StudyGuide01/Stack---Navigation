@@ -91,3 +91,323 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 });
+
+
+
+
+
+/***             ***************    Drawer Navigation ***************** */
+                      installation instraction
+
+1.npm install @react-navigation/native
+2.npx expo install react-native-screens react-native-safe-area-context
+3.npm install react-native-screens react-native-safe-area-context
+4.npm install @react-navigation/drawer
+5.babel > plugins: ['react-native-reanimated/plugin'],
+6.######  Gesture, layout and animation libraries  ##########
+7.npm install react-native-gesture-handler react-native-screen react-native-safe-area-context @react-native-community/masked-view
+8.npm install react-native-paper
+
+
+//********* firstly we add drawer functionality inside return after we do create object
+
+//**      agr ham stack ka header chupane chahate he to ham headerShown:false Stack me lgayenge warne drawer me lgayenge lekin ham stack ka dikhate he or Drawer ka chupate he 
+>or jab ham ye karte he to hmara menubar chup jata he jise ham menualy dikhate he OR USE HAM StackNav me jakr design karte he 
+>>> For open drawer menu bar we add this functionality inside Icon   >>>  onPress={()=>navigation.dispatch(DrawerActions.openDrawer())}
+
+>>>> jo menu item he wo sab jgah dikta he lekin wo wirf Home page per dikhe us ke liye 
+
+
+
+
+
+
+
+
+************************************************* TAB NAVIGATION ******************************
+1.npm install @react-navigation/bottom-tabs
+
+
+////*********** Tabs ko design karna  
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text } from 'react-native';
+import { NavigationContainer,useNavigation,DrawerActions } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import HomeScreen from './screens/HomeScreen';
+import ProfileScreen from './screens/ProfileScreen';
+import UserScreen from './screens/UserScreen';
+import { createDrawerNavigator } from '@react-navigation/drawer';
+import Icon from 'react-native-vector-icons/Entypo';
+import DrawerContent from './DrawerContent';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import SettingScreen from './screens/SettingScreen';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import DetailsScreen from './screens/DetailsScreen';
+
+
+
+
+//Stack Navigation
+const StackNav=()=>{
+  const Stack = createNativeStackNavigator();
+  const navigation =useNavigation();
+  return (
+    <Stack.Navigator
+    
+        // If you want to apply this to all screens
+        screenOptions={{
+          statusBarColor: 'blue',
+          headerStyle: {
+            backgroundColor: 'blue',
+          },
+          headerTintColor: 'white',
+          headerTitleAlign: 'center',
+
+          //agr hame sab jgah menu icon dikhana ho 
+
+          // headerLeft:()=>{
+          //   return(
+          //     <Icon
+          //     name='menu'
+          //     onPress={()=>navigation.dispatch(DrawerActions.openDrawer())}
+          //     size={24}
+          //     color='white'
+          //     />
+          //   )
+           
+          // }
+        }}
+
+        //if we want to Hide Drawer header
+      
+      >
+        <Stack.Screen name="Home" component={HomeScreen}
+        //agr hame sirf Home page per menu icon dikhana ho 
+        options={{
+          headerLeft:()=>{
+            return(
+              <Icon
+              name='menu'
+              onPress={()=>navigation.dispatch(DrawerActions.openDrawer())}
+              size={24}
+              color='white'
+              />
+            )
+           
+          }
+        }}
+        
+        />
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen 
+          name="User" 
+          component={UserScreen}
+
+           //agr ham user me koi funtionalitt add karna chahate he 
+          // options={({ navigation }) => ({
+          //   headerShown: true,
+          //   headerBackVisible: false,
+          //   // Custom back button
+          //   headerLeft: () => (
+          //     <Text onPress={() => navigation.goBack()} style={{ color: 'white', marginLeft: 10 }}>
+          //       Back
+          //     </Text>
+          //   ),
+          // })}
+        />
+      </Stack.Navigator>
+  )
+}
+
+
+
+//Drawer Navigation
+const DrawerNav =()=>{
+  const Drawer = createDrawerNavigator();
+  return(
+    <Drawer.Navigator
+    drawerContent={props=><DrawerContent {...props}/>}
+    screenOptions={{
+     statusBarColor: 'orange',
+     headerStyle: {
+       backgroundColor: 'orange',
+     },
+     headerTintColor: 'white',
+     headerTitleAlign: 'center',
+     headerShown:false
+   }}
+   
+   >
+
+
+
+<Drawer.Screen name='Home' component={StackNav}/>
+
+
+     {/* <Drawer.Screen name='Home' component={HomeScreen}/>
+     <Drawer.Screen name='Profile' component={ProfileScreen}/>
+     <Drawer.Screen name='User' component={UserScreen}/> */}
+
+   </Drawer.Navigator>
+  )
+}
+
+export default function App() {
+ const TabNav = createBottomTabNavigator();
+
+
+ //tab bar icon or sabhi icon ko desing karna ke active hot to kiya dikhe unactive hoto kiya dikhe 
+ const tabConfig = [
+  {
+    name:'Home',
+    component:HomeScreen,
+    focusedIcon:'home',
+    unfocusedIcon:'home-outline',
+    iconComponent:Ionicons
+  },
+  {
+    name:'Profile',
+    component:ProfileScreen,
+    focusedIcon:'user',
+    unfocusedIcon:'user-o',
+    iconComponent:FontAwesome
+  },
+  {
+    name:'Details',
+    component:DetailsScreen,
+    focusedIcon:'file-text',
+    unfocusedIcon:'file-text-o',
+    iconComponent:FontAwesome
+  },
+  {
+    name:'Setting',
+    component:SettingScreen,
+    focusedIcon:'settings',
+    unfocusedIcon:'settings-outline',
+    iconComponent:Ionicons
+  }
+ ]
+
+ //map or find function to destructuring or tabConfig array
+ const screenOptions = ({route})=>({
+  tabBarIcon:({focused,color,size})=>{
+    const routeConfig = tabConfig.find(config=>config.name === route.name);
+    const iconName = focused ? routeConfig.focusedIcon : routeConfig.unfocusedIcon;
+    const iconComponent = routeConfig.iconComponent;
+    return <iconComponent name={iconName} color={color} size={size}/>
+  },
+//to design all screen 
+ // headerShown:false
+  
+  //Kisi Tab KO design karna 
+  tabBarLabelStyle:{
+    fontSize:14,
+    paddingBottom:5,
+    fontWeight:600,
+  },
+  //jha icon or label hote he use desing karna 
+  tabBarStyle:{
+height:60,
+paddingTop:0
+  },
+
+  //ACTIV OR UNActive Tab ko color karna 
+  tabBarActiveTintColor:'orange',
+  tabBarInactiveTintColor:'black'
+ })
+  
+  return (
+    <NavigationContainer>
+      <TabNav.Navigator
+
+      screenOptions={screenOptions}
+
+      //ise yha se hta ke screebOptions wale object me paste karte he 
+//       screenOptions={{
+//         // headerShown:false
+        
+//         //Kisi Tab KO design karna 
+//         tabBarLabelStyle:{
+//           fontSize:14,
+//           paddingBottom:5,
+//           fontWeight:600,
+//         },
+//         //jha icon or label hote he use desing karna 
+//         tabBarStyle:{
+// height:60,
+// paddingTop:0
+//         },
+
+//         //ACTIV OR UNActive Tab ko color karna 
+//         tabBarActiveTintColor:'orange',
+//         tabBarInactiveTintColor:'black'
+//       }}
+      
+      >
+        <TabNav.Screen name='Home' component={HomeScreen}
+        
+        //Icon tab ko design karna 
+        // options={{
+        //   tabBarIcon:({focused})=>(
+        //     <Ionicons 
+        //     name='home'
+        //     size={24}
+        //     color={focused ? 'blue' :'black'}
+        //     />
+        //   )
+        // }}
+        />
+        <TabNav.Screen name='Settings' component={SettingScreen} />
+
+      </TabNav.Navigator>
+ 
+      {/* <DrawerNav/> */}
+    </NavigationContainer>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
+
+
+
+
+
+
+
+
+
+
+/////******************** TAB Navigatin Container Code 
+
+ <TabNav.Navigator screenOptions={screenOptions}>
+        {
+          tabConfig.map(routeConfig=>(
+            <TabNav.Screen 
+            key={routeConfig.name}
+            name={routeConfig.name}
+            component={routeConfig.component}
+            size={routeConfig.size}
+            color={routeConfig.color}
+            
+            />
+          ))
+        }
+        {/* <TabNav.Screen name='Home' component={HomeScreen} />
+        <TabNav.Screen
+  name='Settings'
+  component={SettingScreen}
+  options={{
+    tabBarIcon: ({ focused, color, size }) => (
+      <Ionicons name={focused ? 'settings' : 'settings-outline'} color={color} size={size} />
+    ),
+  }}
+/> */}
+      </TabNav.Navigator>
